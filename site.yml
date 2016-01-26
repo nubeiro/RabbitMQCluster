@@ -1,0 +1,16 @@
+---
+- hosts: rabbits
+  remote_user: pi
+  become: yes
+  become_method: sudo
+  roles:
+    - rabbitmq
+
+- hosts: rabbit_nodes
+  remote_user: pi
+  become: yes
+  become_method: sudo
+  roles:
+    - rabbitmq_node
+
+

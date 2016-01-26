@@ -1,0 +1,13 @@
+---
+- name: check rabbitmq status
+  shell: rabbitmqctl status
+  register: rabbit_status
+- name: stop rabbitmq-server
+  command: rabbitmqctl stop_app
+  when: rabbit_status|failed
+- name: ensure same erlang cookie across nodes
+  copy: src=../files/erlang.cookie dest=/var/lib/rabbitmq/.erlang.cookie owner=rabbitmq group=rabbitmq mode=0400
+- name: join cluster on r2d2
+  command: rabbitmqctl join_cluster rabbit@r2d2
+- name: start service
+  service: name=rabbitmq-server state=started
